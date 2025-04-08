@@ -1,4 +1,4 @@
-package model;
+package deck;
 
 public class Card implements Comparable<Card> {
 

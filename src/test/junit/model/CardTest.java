@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import deck.Card;
+import deck.Rank;
+import deck.Suit;
+
 public class CardTest {
 
     @Test

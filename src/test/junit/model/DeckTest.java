@@ -3,6 +3,12 @@ package model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+
+import deck.Card;
+import deck.Deck;
+import deck.Rank;
+import deck.Suit;
+
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.HashSet;
