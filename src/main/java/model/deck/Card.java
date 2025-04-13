@@ -40,14 +40,23 @@ public class Card implements Comparable<Card> {
 		return rank.getValue();
 	}
 
+	public static Comparator<Card> rankFirstComparator() {
+		return new Comparator<Card>() {
+			public int compare(Card card1, Card card2) {
+				int comp = card1.rank.compareTo(card2.rank);
+				if (comp == 0) {
+					comp = card1.suit.compareTo(card2.suit);
+				}
+				return comp;
+			}
+		};
+	}
+	
+	@Override
 	public int compareTo(Card other) {
-		if (this.getValue() < other.getValue()) {
-			return -1;
-		} else if (this.getValue() > other.getValue()) {
-			return 1;
-		} else {
-			return 0;
-		}
+		if(this.rank.compareTo(other.rank) == 0)
+			return this.suit.compareTo(other.suit);
+		return this.rank.compareTo(other.rank);
 	}
 
 	public String toString() {
