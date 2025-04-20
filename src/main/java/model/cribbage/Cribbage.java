@@ -1,9 +1,10 @@
 package cribbage;
 
-import deck.*;
-import player.*;
+import deck.Card;
+import deck.Deck;
+import player.Player;
 
-import java.util.*;
+import java.util.List;
 
 public class Cribbage {
     private final List<Player> players;
@@ -11,13 +12,13 @@ public class Cribbage {
     private final Crib crib;
     private final Board board;
     private int currentPlayerIndex = 0;
-    private int winningScore = 121;
+    private final int winningScore = 121;
 
     public Cribbage(List<Player> players) {
         this.players = players;
-        this.deck = new Deck();
-        this.crib = new Crib();
-        this.board = new Board(players);
+        this.deck    = new Deck();
+        this.crib    = new Crib();
+        this.board   = new Board(players, crib);
     }
 
     public void startGame() {
@@ -31,22 +32,27 @@ public class Cribbage {
         deck.reset();
         deck.shuffle();
         board.resetHands();
+        crib.clear();
 
         dealCards();
         discardToCrib();
 
         Card starter = deck.pop();
-        board.setStarter(starter);
 
         board.playPhase(currentPlayerIndex);
-        board.scoreHands(starter, crib);
-        board.scoreCrib(starter, crib, getDealer());
+        if (gameOver()) return;
+
+        board.scoreHands(starter);
+        if (gameOver()) return;
+
+        board.scoreCrib(starter, getDealer());
 
         rotateDealer();
     }
 
     private void dealCards() {
-        for (int i = 0; i < 6; i++) {
+        int cardsPer = (players.size() == 2) ? 6 : 5;
+        for (int i = 0; i < cardsPer; i++) {
             for (Player p : players) {
                 p.addCard(deck.pop());
             }
@@ -56,6 +62,9 @@ public class Cribbage {
     private void discardToCrib() {
         for (Player p : players) {
             List<Card> discards = p.selectDiscards();
+            for (Card c : discards) {
+                p.getHand().discard(c);
+            }
             crib.addCards(discards);
         }
     }
@@ -69,10 +78,9 @@ public class Cribbage {
         return false;
     }
 
-    private void declareWinner() {
+    public Player getWinner() {
         Player winner = players.get(0);
         int maxScore = board.getScore(winner);
-
         for (int i = 1; i < players.size(); i++) {
             Player p = players.get(i);
             int score = board.getScore(p);
@@ -81,10 +89,12 @@ public class Cribbage {
                 maxScore = score;
             }
         }
+        return winner;
+    }
 
-        System.out.println("The winner is " + winner.getName());
+    private void declareWinner() {
+        Player winner = getWinner();
         winner.incrementWins();
-
         for (Player p : players) {
             if (!p.equals(winner)) {
                 p.incrementLosses();

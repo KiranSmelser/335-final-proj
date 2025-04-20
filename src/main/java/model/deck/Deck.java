@@ -20,7 +20,7 @@ public class Deck {
 
 	// Remove card from top of Deck
 	public Card pop() {
-		return cards.remove(0);
+		return cards.remove(cards.size() - 1);
 	}
 
 	// Shuffle deck of Cards

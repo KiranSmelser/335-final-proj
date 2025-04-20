@@ -38,12 +38,12 @@ public class DeckTest {
 
     @Test
     public void testPop() {
-        Card topCard = Card.get(Rank.DEUCE, Suit.CLUBS);
+        Card topCard = Card.get(Rank.KING, Suit.SPADES);
         Card poppedCard = deck.pop();
         assertEquals(topCard, poppedCard);
         
         assertThrows(IndexOutOfBoundsException.class, () -> {
-            for (int i = 0; i < 52; i++) {
+            for (int i = 0; i < 53; i++) {
                 deck.pop();
             }
         });

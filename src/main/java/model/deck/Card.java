@@ -1,4 +1,6 @@
 package deck;
+import java.util.Objects;
+import java.util.Comparator;
 
 public class Card implements Comparable<Card> {
 
@@ -13,7 +15,8 @@ public class Card implements Comparable<Card> {
 
 	/* PUBLIC STATIC GETTER */
 	public static Card get(Rank pRank, Suit pSuit) {
-		assert pRank != null && pSuit != null;
+		Objects.requireNonNull(pRank);
+		Objects.requireNonNull(pSuit);
 		return CARDS[pSuit.ordinal()][pRank.ordinal()];
 	}
 
@@ -41,23 +44,15 @@ public class Card implements Comparable<Card> {
 	}
 
 	public static Comparator<Card> rankFirstComparator() {
-		return new Comparator<Card>() {
-			public int compare(Card card1, Card card2) {
-				int comp = card1.rank.compareTo(card2.rank);
-				if (comp == 0) {
-					comp = card1.suit.compareTo(card2.suit);
-				}
-				return comp;
-			}
-		};
+		return Comparator.comparing(Card::getRank)
+                .thenComparing(Card::getSuit);
 	}
 	
 	@Override
 	public int compareTo(Card other) {
-		if(this.rank.compareTo(other.rank) == 0)
-			return this.suit.compareTo(other.suit);
-		return this.rank.compareTo(other.rank);
-	}
+        int cmp = this.rank.compareTo(other.rank);
+        return (cmp != 0) ? cmp : this.suit.compareTo(other.suit);
+    }
 
 	public String toString() {
 		char suitIcon = '\u2663';

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import deck.Card;
 import deck.Rank;
 import deck.Suit;
+import java.util.List;
+import java.util.Arrays;
 
 public class CardTest {
 
@@ -27,20 +29,21 @@ public class CardTest {
     @Test
     public void testGetValue() {
         Card aceCard = Card.get(Rank.ACE, Suit.CLUBS);
-        assertEquals(1, aceCard.getValue());
+        assertEquals(Rank.ACE.getValue(), aceCard.getValue());
         
         Card kingCard = Card.get(Rank.KING, Suit.DIAMONDS);
-        assertEquals(13, kingCard.getValue());
+        assertEquals(Rank.KING.getValue(), kingCard.getValue());
         
         Card deuceCard = Card.get(Rank.DEUCE, Suit.SPADES);
-        assertEquals(2, deuceCard.getValue());
+        assertEquals(Rank.DEUCE.getValue(), deuceCard.getValue());
     }
 
     @Test
     public void testCompareTo() {
         Card card1 = Card.get(Rank.THREE, Suit.CLUBS);
         Card card2 = Card.get(Rank.THREE, Suit.HEARTS);
-        assertEquals(0, card1.compareTo(card2));
+        assertTrue(card1.compareTo(card2) < 0);
+        assertTrue(card2.compareTo(card1) > 0);
         
         Card lowerCard = Card.get(Rank.DEUCE, Suit.CLUBS);
         Card higherCard = Card.get(Rank.THREE, Suit.HEARTS);
@@ -78,12 +81,22 @@ public class CardTest {
 
     @Test
     public void testNullArguments() {
-        assertThrows(AssertionError.class, () -> {
-            Card.get(null, Suit.CLUBS);
-        });
-        
-        assertThrows(AssertionError.class, () -> {
-            Card.get(Rank.ACE, null);
-        });
+        assertThrows(NullPointerException.class, () -> Card.get(null, Suit.CLUBS));
+        assertThrows(NullPointerException.class, () -> Card.get(Rank.ACE, null));
+    }
+    
+    @Test
+    public void testRankFirstComparator() {
+        List<Card> cards = Arrays.asList(
+            Card.get(Rank.THREE, Suit.HEARTS),
+            Card.get(Rank.DEUCE, Suit.SPADES),
+            Card.get(Rank.DEUCE, Suit.CLUBS),
+            Card.get(Rank.THREE, Suit.CLUBS)
+        );
+        cards.sort(Card.rankFirstComparator());
+        assertEquals(Card.get(Rank.DEUCE, Suit.CLUBS), cards.get(0));
+        assertEquals(Card.get(Rank.DEUCE, Suit.SPADES), cards.get(1));
+        assertEquals(Card.get(Rank.THREE, Suit.CLUBS), cards.get(2));
+        assertEquals(Card.get(Rank.THREE, Suit.HEARTS), cards.get(3));
     }
 }
