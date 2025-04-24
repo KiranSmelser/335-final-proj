@@ -7,14 +7,17 @@ import deck.Card;
 
 public class HumanPlayer extends Player {
 	private List<Card> discards;
+	private View view;
 
-	public HumanPlayer(String name) {
+	public HumanPlayer(String name, View view) {
 		super(name);
+		this.view = view;
 		discards = new ArrayList<Card>();
 	}
 
 	@Override
 	public List<Card> selectDiscards(Card starter) {
+		discards = view.promptDiscards(this, starter);
 		return discards;
 	}
 	
