@@ -7,18 +7,20 @@ import player.Player;
 import java.util.List;
 
 public class Cribbage {
-    private final List<Player> players;
+    private View view;
+	private final List<Player> players;
     private final Deck deck;
     private final Crib crib;
     private final Board board;
     private int currentPlayerIndex = 0;
     private final int winningScore = 121;
 
-    public Cribbage(List<Player> players) {
+    public Cribbage(List<Player> players, View view) {
+    	this.view = view;
         this.players = players;
         this.deck    = new Deck();
         this.crib    = new Crib();
-        this.board   = new Board(players, crib);
+        this.board   = new Board(players, crib, view);
     }
 
     public void startGame() {
@@ -38,8 +40,10 @@ public class Cribbage {
         discardToCrib();
 
         Card starter = deck.pop();
+        view.getStarterCard(starter);
 
         board.playPhase(currentPlayerIndex);
+        view.displayScores(board.getAllScores());
         if (gameOver()) return;
 
         board.scoreHands(starter);
