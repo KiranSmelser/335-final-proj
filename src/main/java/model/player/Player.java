@@ -21,8 +21,8 @@ public abstract class Player {
         hand.addCard(card);
     }
 
-	// Removes and returns two cards to be discarded from the hand
-	abstract List<Card> selectDiscards();
+	// Returns two cards to be discarded from the hand
+	public abstract List<Card> selectDiscards();
 	
 	// 
 	public Card playCard(List<Card> playedCards, int currentCount) {
