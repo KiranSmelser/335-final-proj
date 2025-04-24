@@ -13,11 +13,13 @@ import player.Player;
 public class Board {
 	private static final int WINNING_SCORE = 121;
 	
+	private View view;
     private final List<Player> players;
     private final Map<Player, Integer> scoreMap = new HashMap<>();
     private final Crib crib;
 
-    public Board(List<Player> players, Crib crib) {
+    public Board(List<Player> players, Crib crib, View view) {
+    	this.view = view;
         this.players = players;
         this.crib = crib;
         for (Player p : players) {
@@ -68,7 +70,9 @@ public class Board {
                 playedCards.add(play);
                 totalCards--;
                 anyPlayed = true;
-
+                
+                view.displayPlayedCards(playedCards, p.getName());
+                
                 scorePeg(idx, playedCards, currentCount);
 
                 if (scoreMap.get(players.get(idx)) >= WINNING_SCORE) {
