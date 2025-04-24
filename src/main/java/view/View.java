@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class View {
-    private Cribbage cribbage; 
+    	private Cribbage cribbage;
+	private Board board;
 	private Strategy strat;
 	private List<Player> players;
-	private Crib crib;
-	private Board board;
 	private Scanner scanner;
 	
 	// prompt scanner
@@ -21,14 +20,38 @@ public class View {
 	public View() {
 		this.strat = null;
 		this.players = new ArrayList<Player>();
-		this.crib = new Crib();
 		this.scanner = new Scanner(System.in);
 		
 	}
 	
-	// Distribute Cards WIP ???
-	public void start() {
-		this.cribbage.startGame();
+	// Print player's hand
+	public void printHand(Player player) {
+		System.out.println(player.getName() + ", your hand:");
+	    List<Card> hand = player.getHand().getCards();
+	    for (int i = 0; i < hand.size(); i++) {
+	        System.out.println((i + 1) + ". " + hand.get(i));
+	    }
+	}
+	
+	// Selecting card for player
+	private Card playerPlay(Player player, int currentCount) {
+		printHand(player);
+		List<Card> hand = player.getHand().getCards();
+	    int cardIndex = -1;
+	    while (cardIndex < 1 || cardIndex > hand.size()) {
+	        String input = prompt("Enter the number of the card you want to play (1-" + hand.size() + "): ");
+	        try {
+	            cardIndex = Integer.parseInt(input); 
+	            if (cardIndex < 1 || cardIndex > hand.size()) {
+	                System.out.println("Invalid choice. Please select a valid card.");
+	            }
+	        } catch (NumberFormatException e) {
+	            System.out.println("Invalid input. Please enter a number.");
+	        }
+	    }
+	    Card selectedCard = hand.get(cardIndex - 1);
+	    System.out.println("Card you picked: " + selectedCard);
+	    return selectedCard;
 	}
 	
 	// Choosing how to play
