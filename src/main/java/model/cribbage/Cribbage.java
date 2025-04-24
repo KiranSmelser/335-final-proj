@@ -60,8 +60,11 @@ public class Cribbage {
     }
 
     private void discardToCrib() {
+        Card starter = deck.pop();
         for (Player p : players) {
-            List<Card> discards = p.selectDiscards();
+            List<Card> discards = (p instanceof player.ComputerPlayer)
+                ? ((player.ComputerPlayer) p).selectDiscards(starter)
+                : p.selectDiscards(starter);
             for (Card c : discards) {
                 p.getHand().discard(c);
             }

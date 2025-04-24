@@ -3,7 +3,7 @@ package player;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.model.deck.Card;
+import deck.Card;
 
 public class HumanPlayer extends Player {
 	private List<Card> discards;
@@ -14,7 +14,7 @@ public class HumanPlayer extends Player {
 	}
 
 	@Override
-	List<Card> selectDiscards() {
+	public List<Card> selectDiscards(Card starter) {
 		return discards;
 	}
 	

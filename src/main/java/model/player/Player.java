@@ -2,8 +2,8 @@ package player;
 
 import java.util.List;
 
-import main.java.model.cribbage.Hand;
-import main.java.model.deck.Card;
+import cribbage.Hand;
+import deck.Card;
 
 public abstract class Player {
 	private String name;
@@ -22,7 +22,7 @@ public abstract class Player {
     }
 
 	// Returns two cards to be discarded from the hand
-	public abstract List<Card> selectDiscards();
+	public abstract List<Card> selectDiscards(Card Starter);
 	
 	// 
 	public Card playCard(List<Card> playedCards, int currentCount) {
@@ -53,5 +53,10 @@ public abstract class Player {
 	
 	public int getWins() {
 		return wins;
+	}
+
+	public void incrementLosses() {
+		// TODO Auto-generated method stub
+		
 	}
 }
