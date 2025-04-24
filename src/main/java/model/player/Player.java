@@ -5,7 +5,7 @@ import java.util.List;
 import main.java.model.cribbage.Hand;
 import main.java.model.deck.Card;
 
-abstract class Player {
+public abstract class Player {
 	private String name;
 	private Hand hand;
 	private int wins;
