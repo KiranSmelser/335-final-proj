@@ -3,7 +3,7 @@ package model.deck;
 import java.util.Objects;
 import java.util.Comparator;
 
-public class Card implements Comparable<Card> {
+public class Card {
 
 	private final Suit suit;
 	private final Rank rank;
@@ -48,12 +48,6 @@ public class Card implements Comparable<Card> {
 		return Comparator.comparing(Card::getRank)
                 .thenComparing(Card::getSuit);
 	}
-	
-	@Override
-	public int compareTo(Card other) {
-        int cmp = this.rank.compareTo(other.rank);
-        return (cmp != 0) ? cmp : this.suit.compareTo(other.suit);
-    }
 
 	public String toString() {
 		char suitIcon = '\u2663';
