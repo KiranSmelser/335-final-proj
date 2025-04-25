@@ -1,6 +1,7 @@
 package model.cribbage;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +14,17 @@ import model.player.Player;
 import view.View;
 
 public class Board {
-	private static final int WINNING_SCORE = 121;
-	
-	private View view;
+    private static final int WINNING_SCORE = 121;
+    private static final int MAX_COUNT = 31;
+    private static final int FIFTEEN_COUNT = 15;
+    private static final int PAIR_SCORE = 2;
+    private static final int PAIR_TRIPLE_SCORE = 6;
+    private static final int PAIR_QUAD_SCORE = 12;
+    private static final int MIN_RUN_LENGTH = 3;
+
+    private View view;
     private final List<Player> players;
-    private final Map<Player, Integer> scoreMap = new HashMap<>();
+    private final Map<Player, Integer> scoreMap = new LinkedHashMap<>();
     private final Crib crib;
 
     public Board(List<Player> players, Crib crib, View view) {
@@ -77,16 +84,16 @@ public class Board {
                 playedCards.add(play);
                 totalCards--;
                 anyPlayed = true;
-                
+
                 view.displayPlayedCards(playedCards, p.getName());
-                
+
                 scorePeg(idx, playedCards, currentCount);
 
                 if (scoreMap.get(players.get(idx)) >= WINNING_SCORE) {
                     return;
                 }
 
-                if (currentCount == 31) {
+                if (currentCount == MAX_COUNT) {
                     currentCount = 0;
                     playedCards.clear();
                     Arrays.fill(hasPassed, false);
@@ -120,8 +127,8 @@ public class Board {
         int points = 0;
 
         // Fifteens & 31
-        if (currentCount == 15 || currentCount == 31) {
-            points += 2;
+        if (currentCount == FIFTEEN_COUNT || currentCount == MAX_COUNT) {
+            points += PAIR_SCORE;
         }
 
         // Pairs/multiples
@@ -137,14 +144,14 @@ public class Board {
                 }
             }
             switch (pairCount) {
-                case 1: points += 2; break;
-                case 2: points += 6; break;
-                case 3: points += 12; break;
+                case 1: points += PAIR_SCORE; break;
+                case 2: points += PAIR_TRIPLE_SCORE; break;
+                case 3: points += PAIR_QUAD_SCORE; break;
             }
         }
 
         // Runs
-        for (int runLen = size; runLen >= 3; runLen--) {
+        for (int runLen = size; runLen >= MIN_RUN_LENGTH; runLen--) {
             List<Card> seg = playedCards.subList(size - runLen, size);
             Map<Integer,Integer> freq = new HashMap<>();
             for (Card c : seg) {

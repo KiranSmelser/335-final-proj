@@ -52,4 +52,71 @@ class HardStrategyTest {
 		assertTrue(discards.contains(Card.get(Rank.DEUCE, Suit.HEARTS)));
 		assertTrue(discards.contains(Card.get(Rank.THREE, Suit.CLUBS)));
 	}
+
+    @Test
+    void testPlayCardScoresFifteen() {
+        Hand hand = new Hand();
+        Card two = Card.get(Rank.DEUCE, Suit.HEARTS);
+        Card king = Card.get(Rank.KING, Suit.SPADES);
+        hand.addCard(two);
+        hand.addCard(king);
+        
+        HardStrategy strategy = new HardStrategy();
+        List<Card> played = new ArrayList<>();
+        Card choice = strategy.playCard(hand, played, 13);
+        
+        assertNotNull(choice);
+        assertEquals(two, choice);
+    }
+
+    @Test
+    void testPlayCardNoPlayable() {
+        Hand hand = new Hand();
+        Card king = Card.get(Rank.KING, Suit.CLUBS);
+        hand.addCard(king);
+        
+        HardStrategy strategy = new HardStrategy();
+        List<Card> played = new ArrayList<>();
+        Card choice = strategy.playCard(hand, played, 25);
+        
+        assertNull(choice);
+    }
+
+    @Test
+    void testPlayCardPrefersPair() {
+        Hand hand = new Hand();
+        Card twoH = Card.get(Rank.DEUCE, Suit.HEARTS);
+        Card three = Card.get(Rank.THREE, Suit.CLUBS);
+        hand.addCard(twoH);
+        hand.addCard(three);
+        
+        HardStrategy strategy = new HardStrategy();
+        List<Card> played = new ArrayList<>();
+        Card twoS = Card.get(Rank.DEUCE, Suit.SPADES);
+        played.add(twoS);
+        int currentCount = twoS.getValue();
+        Card choice = strategy.playCard(hand, played, currentCount);
+        
+        assertEquals(twoH, choice);
+    }
+
+    @Test
+    void testPlayCardPrefersRun() {
+        Hand hand = new Hand();
+        Card four = Card.get(Rank.FOUR, Suit.CLUBS);
+        Card five = Card.get(Rank.FIVE, Suit.HEARTS);
+        hand.addCard(four);
+        hand.addCard(five);
+        
+        HardStrategy strategy = new HardStrategy();
+        List<Card> played = new ArrayList<>();
+        Card two = Card.get(Rank.DEUCE, Suit.CLUBS);
+        Card three = Card.get(Rank.THREE, Suit.DIAMONDS);
+        played.add(two);
+        played.add(three);
+        int currentCount = two.getValue() + three.getValue();
+        Card choice = strategy.playCard(hand, played, currentCount);
+        
+        assertEquals(four, choice);
+    }
 }

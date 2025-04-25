@@ -13,8 +13,11 @@ import java.util.Map;
 import java.util.ArrayList;
 
 public class Cribbage {
+    private static final int TWO_PLAYER_HAND_CARDS = 6;
+    private static final int MULTI_PLAYER_HAND_CARDS = 5;
+
     private View view;
-	private final List<Player> players;
+    private final List<Player> players;
     private final Deck deck;
     private final Crib crib;
     private final Board board;
@@ -118,7 +121,7 @@ public class Cribbage {
     }
 
     private void dealCards() {
-        int cardsPer = (players.size() == 2) ? 6 : 5;
+        int cardsPer = (players.size() == 2) ? TWO_PLAYER_HAND_CARDS : MULTI_PLAYER_HAND_CARDS;
         for (int i = 0; i < cardsPer; i++) {
             for (Player p : players) {
                 p.addCard(deck.pop());

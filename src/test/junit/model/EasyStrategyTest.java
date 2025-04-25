@@ -48,4 +48,33 @@ class EasyStrategyTest {
 			assertTrue(handSet.contains(c));
 		}
 	}
+
+    @Test
+    void testPlayCardReturnsPlayable() {
+        Hand hand = new Hand();
+        Card three = Card.get(Rank.THREE, Suit.SPADES);
+        Card king = Card.get(Rank.KING, Suit.HEARTS);
+        hand.addCard(three);
+        hand.addCard(king);
+        
+        EasyStrategy strategy = new EasyStrategy();
+        List<Card> played = new ArrayList<>();
+        Card choice = strategy.playCard(hand, played, 28);
+
+        assertNotNull(choice);
+        assertEquals(three, choice);
+    }
+
+    @Test
+    void testPlayCardNoPlayable() {
+        Hand hand = new Hand();
+        Card ten = Card.get(Rank.TEN, Suit.DIAMONDS);
+        hand.addCard(ten);
+        
+        EasyStrategy strategy = new EasyStrategy();
+        List<Card> played = new ArrayList<>();
+        Card choice = strategy.playCard(hand, played, 25);
+        
+        assertNull(choice);
+    }
 }

@@ -1,7 +1,7 @@
 package model.cribbage;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -10,8 +10,12 @@ import model.deck.Rank;
 import model.deck.Suit;
 
 public class Hand {
+    private static final int MIN_RUN_LENGTH = 3;
+    private static final int MIN_FLUSH_CARDS = 4;
+    private static final int FLUSH_WITH_STARTER = 5;
+
     /* VARIABLES */
-    private ArrayList<Card> cards;
+    private List<Card> cards;
 
     /* Rank ordinal helper */
     private int rankOrdinal(Card card) {
@@ -82,11 +86,11 @@ public class Hand {
 
     // Count flush
     public int getFlushSum(Card starter) {
-        if (cards.size() < 4) return 0;
+        if (cards.size() < MIN_FLUSH_CARDS) return 0;
         Suit suit0 = cards.get(0).getSuit();
         boolean allSame = cards.stream().allMatch(c -> c.getSuit() == suit0);
         if (!allSame) return 0;
-        return (starter != null && starter.getSuit() == suit0) ? 5 : 4;
+        return (starter != null && starter.getSuit() == suit0) ? FLUSH_WITH_STARTER : MIN_FLUSH_CARDS;
     }
 
     // Count fifteens
@@ -112,7 +116,7 @@ public class Hand {
         int total = 0;
         for (int i = 0; i < list.size(); i++) {
             for (int j = i + 1; j < list.size(); j++) {
-            	if (list.get(i).getRank() == list.get(j).getRank()) {
+                if (list.get(i).getRank() == list.get(j).getRank()) {
                     total += 2;
                 }
             }
@@ -136,12 +140,12 @@ public class Hand {
                 mult *= freq.get(r);
                 r++;
             }
-            if (len >= 3 && (len > bestLen || (len == bestLen && mult > bestMult))) {
+            if (len >= MIN_RUN_LENGTH && (len > bestLen || (len == bestLen && mult > bestMult))) {
                 bestLen = len;
                 bestMult = mult;
             }
         }
-        return bestLen >= 3 ? bestLen * bestMult : 0;
+        return bestLen >= MIN_RUN_LENGTH ? bestLen * bestMult : 0;
     }
 
     // To string method
