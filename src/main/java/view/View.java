@@ -2,7 +2,7 @@ package view;
 
 /**
  * Handles all console-based user interaction for the Cribbage game.
- * <p>
+ * 
  * Implementation authored by ChatGPT AI assistant.
  */
 
@@ -199,50 +199,73 @@ public class View {
      */
 	// Choosing how to play
 	public void playMode() {
-		System.out.println("1. Single Player");
-		System.out.println("2. (Local) Two Players");
-		String choice = prompt("Press a number to choose how you want to play: ");
-		switch (choice) {
-		case "1":
-			this.chooseStrategy();
-			choice =  prompt("Type in your name: ");
-			Player user = new HumanPlayer(choice, this);
-			
-			choice =  prompt("Type in the computer's name: ");
-			Player computer = new ComputerPlayer(choice, this.strat, this.board);
-			
-			players.add(user);
-			players.add(computer);
-			
-			break;
-		case "2": 
-			choice =  prompt("Type in player one's name: ");
-			Player p1 = new HumanPlayer(choice, this);
-			
-			choice =  prompt("Type in player two's name: ");
-			Player p2 = new HumanPlayer(choice, this);
-			
-			players.add(p1);
-			players.add(p2);
-			break;
-		case "q":
-			this.endGame();
-		default:
-			System.out.println("Invalid choice. Default set against computer on easy mode");
-			strat = new EasyStrategy();
-			choice =  prompt("Type in your name: ");
-			Player playerUser = new HumanPlayer(choice, this);
-			
-			choice =  prompt("Type in the computer's name: ");
-			Player compUser = new ComputerPlayer(choice, this.strat, this.board);
-			
-			players.add(playerUser);
-			players.add(compUser);
-			
-			break;
-		}
-		System.out.println(players.get(0).getName() + " vs " + players.get(1).getName());
-		this.board = new Board(players, crib, this);
+	    String choice;
+	    // Prompt for play mode until valid input
+	    do {
+	        System.out.println("1. Single Player");
+	        System.out.println("2. (Local) Two Players");
+	        choice = prompt("Press a number to choose how you want to play (1 or 2), or 'q' to quit: ");
+	        if (choice.equals("q")) {
+	            this.endGame();
+	        }
+	        if (!choice.equals("1") && !choice.equals("2")) {
+	            System.out.println("Invalid choice. Please enter 1 or 2.");
+	        }
+	    } while (!choice.equals("1") && !choice.equals("2"));
+
+	    // Configure players based on choice
+	    if (choice.equals("1")) {
+	        // Single player mode
+	        this.chooseStrategy();
+	        String name;
+	        // Validate user name
+	        do {
+	            name = prompt("Type in your name: ");
+	            if (name.isEmpty()) {
+	                System.out.println("Name cannot be empty. Please enter a valid name.");
+	            }
+	        } while (name.isEmpty());
+	        Player user = new HumanPlayer(name, this);
+
+	        // Validate computer name
+	        do {
+	            name = prompt("Type in the computer's name: ");
+	            if (name.isEmpty()) {
+	                System.out.println("Name cannot be empty. Please enter a valid name.");
+	            }
+	        } while (name.isEmpty());
+	        Player computer = new ComputerPlayer(name, this.strat, this.board);
+
+	        players.add(user);
+	        players.add(computer);
+	    } else {
+	        // Two-player mode
+	        String name;
+	        // Validate player one name
+	        do {
+	            name = prompt("Type in player one's name: ");
+	            if (name.isEmpty()) {
+	                System.out.println("Name cannot be empty. Please enter a valid name.");
+	            }
+	        } while (name.isEmpty());
+	        Player p1 = new HumanPlayer(name, this);
+
+	        // Validate player two name
+	        do {
+	            name = prompt("Type in player two's name: ");
+	            if (name.isEmpty()) {
+	                System.out.println("Name cannot be empty. Please enter a valid name.");
+	            }
+	        } while (name.isEmpty());
+	        Player p2 = new HumanPlayer(name, this);
+
+	        players.add(p1);
+	        players.add(p2);
+	    }
+
+	    System.out.println(players.get(0).getName() + " vs " + players.get(1).getName());
+	    // Initialize board with validated players
+	    this.board = new Board(players, crib, this);
 	}
 	
     /**
@@ -250,25 +273,28 @@ public class View {
      */
 	// Choosing mode
 	private void chooseStrategy() {
-		System.out.println("1. Easy");
-		System.out.println("2. Hard");
-		String choice = prompt("Press a number to choose a mode: ");
-		switch (choice) {
-		case "1":
-			strat = new EasyStrategy();
-			System.out.println("You're on easy mode");
-			break;
-		case "2": 
-			strat = new HardStrategy();
-			System.out.println("You're on hard mode");
-			break;
-		case "q":
-			this.endGame();
-		default:
-			strat = new EasyStrategy();
-			System.out.println("Invalid choice. Default set to easy mode");
-			break;
-		}
+	    String choice;
+	    // Prompt for strategy until valid input
+	    do {
+	        System.out.println("1. Easy");
+	        System.out.println("2. Hard");
+	        choice = prompt("Press a number to choose a mode (1 or 2), or 'q' to quit: ");
+	        if (choice.equals("q")) {
+	            this.endGame();
+	        }
+	        if (!choice.equals("1") && !choice.equals("2")) {
+	            System.out.println("Invalid choice. Please enter 1 or 2.");
+	        }
+	    } while (!choice.equals("1") && !choice.equals("2"));
+
+	    // Assign strategy based on valid choice
+	    if (choice.equals("1")) {
+	        strat = new EasyStrategy();
+	        System.out.println("You're on easy mode");
+	    } else {
+	        strat = new HardStrategy();
+	        System.out.println("You're on hard mode");
+	    }
 	}
 	
     /**
