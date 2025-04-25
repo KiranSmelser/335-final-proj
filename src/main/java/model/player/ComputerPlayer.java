@@ -14,9 +14,18 @@ public class ComputerPlayer extends Player {
         this.strategy = strategy;
         this.board = board;
     }
+    
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 
     @Override
     public List<Card> selectDiscards(Card starter) {
         return strategy.discard(getHand(), board, starter);
+    }
+    
+    @Override
+    public Card playCard(List<Card> playedCards, int currentCount) {
+        return strategy.playCard(getHand(), playedCards, currentCount);
     }
 }

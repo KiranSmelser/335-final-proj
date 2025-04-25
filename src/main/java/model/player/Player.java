@@ -16,15 +16,12 @@ public abstract class Player {
 		wins = 0;
 	}
 
-	// Adds a card to the hand
 	public void addCard(Card card) {
         hand.addCard(card);
     }
 
-	// Returns two cards to be discarded from the hand
 	public abstract List<Card> selectDiscards(Card Starter);
 	
-	// 
 	public Card playCard(List<Card> playedCards, int currentCount) {
         for (Card c : hand.getCards()) {
             if (c.getValue() + currentCount <= 31) {
@@ -38,7 +35,6 @@ public abstract class Player {
 		wins++;
 	}
 	
-	// Sets hand to a new empty hand object
 	public void resetHand() {
 		hand = new Hand();
 	}
@@ -55,8 +51,4 @@ public abstract class Player {
 		return wins;
 	}
 
-	public void incrementLosses() {
-		// TODO Auto-generated method stub
-		
-	}
 }

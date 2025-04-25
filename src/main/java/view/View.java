@@ -1,12 +1,22 @@
+
 package view;
 
-import java.util.ArrayList;
+/**
+ * Handles all console-based user interaction for the Cribbage game.
+ * <p>
+ * Implementation authored by ChatGPT AI assistant.
+ */
+
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
-import model.game.*;
-import model.player.*;
-import model.deck.*;
+import java.util.stream.Collectors;
+
+import cribbage.*;
+import player.*;
+import deck.*;
+
 public class View {
 	
 	private Board board;
@@ -21,6 +31,10 @@ public class View {
 	    return scanner.nextLine().trim();
 	}
 
+    /**
+     * Constructs a new View for console interaction.
+     * Initializes player list and input scanner.
+     */
 	public View() {
 		this.strat = null;
 		this.players = new ArrayList<Player>();
@@ -29,13 +43,23 @@ public class View {
 		
 	}
 	
+    /**
+     * Begins the game by setting up players and starting the Cribbage game loop.
+     */
 	public void startGame() {
-		Cribbage cribbage = new Cribbage(players, this);
-		cribbage.startGame();
-		System.out.println("Game Over!");
-		System.out.println("Winner: " + cribbage.getWinner().getName());
+	    // Prompt and set up players before starting the game
+	    List<Player> players = setupPlayers();
+	    Cribbage game = new Cribbage(players, this);
+	    game.startGame();
 	}
 	
+    /**
+     * Prompts a human player to select two cards to discard into the crib.
+     *
+     * @param player the human player making the discard
+     * @param starter the starter card to which discards are compared
+     * @return a list of two cards selected for the crib
+     */
 	public List<Card> promptDiscards(HumanPlayer player, Card starter) {
 	    List<Card> hand = player.getHand().getCards();
 	    List<Card> chosenDiscards = new ArrayList<>();
@@ -71,6 +95,14 @@ public class View {
 	}
 
 	
+    /**
+     * Prompts a player to choose a card to play during pegging.
+     *
+     * @param player the player whose turn it is
+     * @param playedCards the list of cards already played in this sequence
+     * @param currentCount the current count total in pegging
+     * @return the card chosen to play, or null if passing
+     */
 	public Card promptPlayCard(Player player, List<Card> playedCards, int currentCount) {
 		List<Card> hand = player.getHand().getCards();
 
@@ -94,7 +126,7 @@ public class View {
 		while (true) {
 			String input = prompt("Choose a card to play (1-" + hand.size() + "), or 0 to pass: ");
 			try {
-				if (input == "q") {
+				if (input.equals("q")) {
 					this.endGame();
 				}
 				int choice = Integer.parseInt(input);
@@ -116,6 +148,11 @@ public class View {
 		}
 	}
 
+    /**
+     * Displays the specified player's hand in the console.
+     *
+     * @param player the player whose hand to print
+     */
 	// Print player's hand
 	public void printHand(Player player) {
 		System.out.println(player.getName() + ", your hand:");
@@ -125,39 +162,42 @@ public class View {
 	    }
 	}
 	
+    /**
+     * Displays the current scores of all players in a formatted table.
+     *
+     * @param scores a map from players to their current scores
+     */
 	public void displayScores(Map<Player, Integer> scores) {
-	    System.out.println("Current Scores:");
+	    System.out.println("\n==================== Current Scores ====================");
 	    for (Map.Entry<Player, Integer> entry : scores.entrySet()) {
-	        System.out.println(entry.getKey().getName() + ": " + entry.getValue() + " points");
+	        System.out.printf("%-12s : %3d pts\n", entry.getKey().getName(), entry.getValue());
 	    }
-	    System.out.println("-----------------------------");
+	    System.out.println("========================================================\n");
 	}
 
+    /**
+     * Announces the winner of the game.
+     *
+     * @param winnerName the name of the winning player
+     */
+    public void displayWinner(String winnerName) {
+        System.out.println("\nGame Over!");
+        System.out.println("Winner: " + winnerName);
+    }
+
+    /**
+     * Handles the playMode flow to configure and return the list of players.
+     *
+     * @return the configured list of players for the game
+     */
+    private List<Player> setupPlayers() {
+        playMode();
+        return new ArrayList<>(players);
+    }
 	
-	// Selecting card for player
-	private Card playerPlay(Player player, int currentCount) {
-		printHand(player);
-		List<Card> hand = player.getHand().getCards();
-	    int cardIndex = -1;
-	    while (cardIndex < 1 || cardIndex > hand.size()) {
-	        String input = prompt("Enter the number of the card you want to play (1-" + hand.size() + "): ");
-	        try {
-	        	if (input == "q") {
-	        		this.endGame();
-	        	}
-	            cardIndex = Integer.parseInt(input); 
-	            if (cardIndex < 1 || cardIndex > hand.size()) {
-	                System.out.println("Invalid choice. Please select a valid card.");
-	            }
-	        } catch (NumberFormatException e) {
-	            System.out.println("Invalid input. Please enter a number.");
-	        }
-	    }
-	    Card selectedCard = hand.get(cardIndex - 1);
-	    System.out.println("Card you picked: " + selectedCard);
-	    return selectedCard;
-	}
-	
+    /**
+     * Prompts the user to select single or two-player mode and configures players accordingly.
+     */
 	// Choosing how to play
 	public void playMode() {
 		System.out.println("1. Single Player");
@@ -206,6 +246,9 @@ public class View {
 		this.board = new Board(players, crib, this);
 	}
 	
+    /**
+     * Prompts the user to select the computer strategy (easy or hard).
+     */
 	// Choosing mode
 	private void chooseStrategy() {
 		System.out.println("1. Easy");
@@ -229,28 +272,145 @@ public class View {
 		}
 	}
 	
-	//
+    /**
+     * Returns a copy of the current player list.
+     *
+    * @return a list of players configured for the game
+     */
 	public List<Player> getPlayers() {
 		return new ArrayList<Player>(List.copyOf(players));
 	}
 	
+    /**
+     * Displays the cards played so far in the current pegging sequence.
+     *
+     * @param playedCards the sequence of cards played
+     * @param playerName the name of the player who just played
+     */
 	public void displayPlayedCards(List<Card> playedCards, String playerName) {
-	    System.out.println(playerName + " played: ");
-	    for (Card card : playedCards) {
-	        System.out.println(card);
-	    }
+	    String plays = playedCards.stream()
+	        .map(Card::toString)
+	        .collect(Collectors.joining(", "));
+	    System.out.println("\n" + playerName + " played: " + plays + "\n");
 	}
 
-
+    /**
+     * Shows the starter card to all players after discards are made.
+     *
+     * @param starter the starter card cut from the deck
+     */
 	public void getStarterCard(Card starter) {
-		System.out.println("\nStarter Card: " + starter);
-		
+	    System.out.println("\n****** Starter Card: " + starter + " ******\n");
 	}
 	
+    /**
+     * Displays the card each player cuts to decide first dealer.
+     *
+     * @param playerName the name of the player cutting
+     * @param card the card that was cut
+     */
+	public void displayCutCard(String playerName, Card card) {
+	    System.out.println(">> " + playerName + " cut: " + card + " <<");
+	}
+
+    /**
+     * Announces which player will take the first turn.
+     *
+     * @param playerName the name of the starting player
+     */
+	public void displayFirstPlayer(String playerName) {
+	    System.out.println("\n>>> " + playerName + " will go first! <<<\n");
+	}
+	
+    /**
+     * Ends the game immediately, closing resources and exiting.
+     */
 	public void endGame() {
 		System.out.println("Game Over!");
 		scanner.close();
 		System.exit(0);
 	}
-}
+    /**
+     * Displays pegging points as they occur during play.
+     *
+     * @param playerName the name of the player who scored
+     * @param points the points scored in this play
+     * @param totalScore the player's new total score
+     */
+    public void displayPegScore(String playerName, int points, int totalScore) {
+        System.out.printf("\n%s scores %d point%s! [Total: %d]\n\n",
+            playerName,
+            points,
+            (points > 1 ? "s" : ""),
+            totalScore
+        );
+    }
+
+    /**
+     * Displays individual hand scoring deltas for each player.
+     *
+     * @param before map of scores before hand scoring
+     * @param after map of scores after hand scoring
+     */
+    public void displayHandScores(Map<player.Player,Integer> before, Map<player.Player,Integer> after) {
+        System.out.println("\n--- Hand Scoring ---");
+        for (player.Player p : after.keySet()) {
+            int delta = after.get(p) - before.getOrDefault(p, 0);
+            System.out.printf("%-12s : +%d point%s\n",
+                p.getName(),
+                delta,
+                (delta > 1 ? "s" : "")
+            );
+        }
+        System.out.println("--------------------\n");
+    }
+
+    /**
+     * Displays the scoring delta for the dealer's crib.
+     *
+     * @param before map of scores before crib scoring
+     * @param after map of scores after crib scoring
+     * @param dealer the dealer who scores the crib
+     */
+    public void displayCribScores(Map<player.Player,Integer> before, Map<player.Player,Integer> after, player.Player dealer) {
+        System.out.println("\n--- Crib Scoring ---");
+        int delta = after.get(dealer) - before.getOrDefault(dealer, 0);
+        System.out.printf("%-12s : +%d point%s\n",
+            dealer.getName(),
+            delta,
+            (delta > 1 ? "s" : "")
+        );
+        System.out.println("---------------------\n");
+    }
+
+    /**
+     * Displays all players' hands prior to scoring.
+     *
+     * @param players the list of players whose hands to show
+     */
+    public void displayAllHands(List<player.Player> players) {
+        System.out.println("\n=== Players' Hands ===");
+        for (player.Player p : players) {
+            String hand = p.getHand().getCards().stream()
+                .map(Card::toString)
+                .collect(Collectors.joining("  "));
+            System.out.printf("%-12s: %s\n", p.getName(), hand);
+        }
+        System.out.println("======================\n");
+    }
+
+    /**
+     * Displays the contents of the crib before scoring.
+     *
+     * @param cards the list of cards in the crib
+     */
+    public void displayCribContents(List<deck.Card> cards) {
+        System.out.println("\n=== Crib Contents ===");
+        String cribCards = cards.stream()
+            .map(Card::toString)
+            .collect(Collectors.joining("  "));
+        System.out.println(cribCards);
+        System.out.println("=====================\n");
+    }
+// View.java implementation completed by ChatGPT AI assistant.
 }

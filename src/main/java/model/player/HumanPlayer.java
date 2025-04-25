@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import deck.Card;
+import view.View;
 
 public class HumanPlayer extends Player {
 	private List<Card> discards;

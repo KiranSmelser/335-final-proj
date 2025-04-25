@@ -8,7 +8,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import deck.Card;
+import player.HumanPlayer;
 import player.Player;
+import view.View;
 
 public class Board {
 	private static final int WINNING_SCORE = 121;
@@ -56,7 +58,12 @@ public class Board {
 
                 Player p = players.get(idx);
                 Hand hand = hands.get(idx);
-                Card play = p.playCard(new ArrayList<>(playedCards), currentCount);
+                Card play;
+                if (p instanceof HumanPlayer) {
+                    play = view.promptPlayCard(p, new ArrayList<>(playedCards), currentCount);
+                } else {
+                    play = p.playCard(new ArrayList<>(playedCards), currentCount);
+                }
 
                 if (play != null && hand.getCards().contains(play)) {
                     hand.discard(play);
@@ -92,11 +99,11 @@ public class Board {
 
             if (!anyPlayed) {
                 if (currentCount > 0 && lastPlayer != -1) {
-                    scoreMap.put(
-                        players.get(lastPlayer),
-                        scoreMap.get(players.get(lastPlayer)) + 1
-                    );
-                    if (scoreMap.get(players.get(lastPlayer)) >= WINNING_SCORE) {
+                    Player goPlayer = players.get(lastPlayer);
+                    int newScore = scoreMap.get(goPlayer) + 1;
+                    scoreMap.put(goPlayer, newScore);
+                    view.displayPegScore(goPlayer.getName(), 1, newScore);
+                    if (scoreMap.get(goPlayer) >= WINNING_SCORE) {
                         return;
                     }
                     currentPlayer = lastPlayer;
@@ -163,7 +170,9 @@ public class Board {
         }
 
         if (points > 0) {
-            scoreMap.put(player, scoreMap.get(player) + points);
+            int newScore = scoreMap.get(player) + points;
+            scoreMap.put(player, newScore);
+            view.displayPegScore(player.getName(), points, newScore);
         }
     }
 
@@ -182,5 +191,16 @@ public class Board {
 
     public int getScore(Player p) {
         return scoreMap.getOrDefault(p, 0);
+    }
+    
+    public Map<Player,Integer> getAllScores() {
+        return Collections.unmodifiableMap(scoreMap);
+    }
+
+    public void resetScores() {
+        scoreMap.clear();
+        for (Player p : players) {
+            scoreMap.put(p, 0);
+        }
     }
 }
