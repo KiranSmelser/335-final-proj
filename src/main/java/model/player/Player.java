@@ -17,8 +17,12 @@ public abstract class Player {
 	}
 
 	public void addCard(Card card) {
-        hand.addCard(card);
-    }
+        	hand.addCard(card);
+    	}
+
+	public void sortCards() {
+		hand.sort();
+	}
 
 	public abstract List<Card> selectDiscards(Card Starter);
 	
