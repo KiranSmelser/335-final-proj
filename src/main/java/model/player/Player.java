@@ -48,6 +48,11 @@ public abstract class Player {
 	}
 	
 	public Hand getHand() {
+		Hand handCopy = new Hand();
+		for (Card c : hand.getCards()) {
+			handCopy.addCard(c);
+		}
+		
 		return hand;
 	}
 	
