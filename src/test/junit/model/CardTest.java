@@ -39,17 +39,16 @@ public class CardTest {
     }
 
     @Test
-    public void testCompareTo() {
+    public void testComparatorCompare() {
         Card card1 = Card.get(Rank.THREE, Suit.CLUBS);
         Card card2 = Card.get(Rank.THREE, Suit.HEARTS);
-        assertTrue(card1.compareTo(card2) < 0);
-        assertTrue(card2.compareTo(card1) > 0);
-        
+        assertTrue(Card.rankFirstComparator().compare(card1, card2) < 0);
+        assertTrue(Card.rankFirstComparator().compare(card2, card1) > 0);
+
         Card lowerCard = Card.get(Rank.DEUCE, Suit.CLUBS);
         Card higherCard = Card.get(Rank.THREE, Suit.HEARTS);
-        
-        assertTrue(lowerCard.compareTo(higherCard) < 0);
-        assertTrue(higherCard.compareTo(lowerCard) > 0);
+        assertTrue(Card.rankFirstComparator().compare(lowerCard, higherCard) < 0);
+        assertTrue(Card.rankFirstComparator().compare(higherCard, lowerCard) > 0);
     }
 
     @Test
