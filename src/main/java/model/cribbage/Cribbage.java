@@ -116,4 +116,8 @@ public class Cribbage {
     private Player getDealer() {
         return players.get(currentPlayerIndex);
     }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
 }
