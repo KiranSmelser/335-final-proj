@@ -8,10 +8,10 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import cribbage.Crib;
-import deck.Card;
-import deck.Rank;
-import deck.Suit;
+import model.cribbage.Crib;
+import model.deck.Card;
+import model.deck.Rank;
+import model.deck.Suit;
 
 public class CribTest {
     private Crib crib;

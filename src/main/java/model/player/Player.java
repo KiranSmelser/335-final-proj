@@ -1,9 +1,9 @@
-package player;
+package model.player;
 
 import java.util.List;
 
-import cribbage.Hand;
-import deck.Card;
+import model.cribbage.Hand;
+import model.deck.Card;
 
 public abstract class Player {
 	private String name;

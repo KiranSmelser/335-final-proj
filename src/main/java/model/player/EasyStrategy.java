@@ -1,12 +1,12 @@
-package player;
+package model.player;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
-import cribbage.Board;
-import cribbage.Hand;
-import deck.Card;
+import model.cribbage.Board;
+import model.cribbage.Hand;
+import model.deck.Card;
 
 public class EasyStrategy implements Strategy {
 

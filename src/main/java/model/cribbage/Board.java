@@ -1,4 +1,4 @@
-package cribbage;
+package model.cribbage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.Collections;
 
-import deck.Card;
-import player.HumanPlayer;
-import player.Player;
+import model.deck.Card;
+import model.player.HumanPlayer;
+import model.player.Player;
 import view.View;
 
 public class Board {

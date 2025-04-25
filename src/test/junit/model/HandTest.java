@@ -3,11 +3,11 @@ package model;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import deck.Deck;
-import cribbage.Hand;
-import deck.Card;
-import deck.Rank;
-import deck.Suit;
+import model.deck.Deck;
+import model.cribbage.Hand;
+import model.deck.Card;
+import model.deck.Rank;
+import model.deck.Suit;
 
 public class HandTest {
 

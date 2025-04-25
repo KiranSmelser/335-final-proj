@@ -1,8 +1,8 @@
-package cribbage;
+package model.cribbage;
 
 import java.util.List;
 import java.util.ArrayList;
-import deck.Card;
+import model.deck.Card;
 
 public class Crib {
     private final List<Card> cards = new ArrayList<>();

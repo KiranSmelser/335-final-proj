@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import deck.Card;
-import deck.Rank;
-import deck.Suit;
+import model.deck.Card;
+import model.deck.Rank;
+import model.deck.Suit;
 import java.util.List;
 import java.util.Arrays;
 

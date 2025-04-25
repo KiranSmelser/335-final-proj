@@ -1,9 +1,9 @@
-package cribbage;
+package model.cribbage;
 
-import deck.Card;
-import deck.Deck;
-import player.ComputerPlayer;
-import player.Player;
+import model.deck.Card;
+import model.deck.Deck;
+import model.player.ComputerPlayer;
+import model.player.Player;
 import view.View;
 import java.util.List;
 import java.util.Map.Entry;

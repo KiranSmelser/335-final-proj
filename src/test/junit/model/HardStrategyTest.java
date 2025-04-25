@@ -1,4 +1,4 @@
-package player;
+package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,11 +9,12 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import cribbage.Board;
-import cribbage.Hand;
-import deck.Card;
-import deck.Rank;
-import deck.Suit;
+import model.cribbage.Board;
+import model.cribbage.Hand;
+import model.deck.Card;
+import model.deck.Rank;
+import model.deck.Suit;
+import model.player.HardStrategy;
 
 class HardStrategyTest {
 
@@ -33,7 +34,7 @@ class HardStrategyTest {
 			hand.addCard(c);
 		}
 
-		Board board = new Board(new ArrayList<>(), null);
+		Board board = new Board(new ArrayList<>(), null, null);
 		Card starter = Card.get(Rank.FIVE, Suit.CLUBS);
 
 		HardStrategy strategy = new HardStrategy();

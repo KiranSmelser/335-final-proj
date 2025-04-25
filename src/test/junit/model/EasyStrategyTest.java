@@ -1,4 +1,4 @@
-package player;
+package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,11 +9,12 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
-import cribbage.Hand;
-import cribbage.Board;
-import deck.Card;
-import deck.Rank;
-import deck.Suit;
+import model.player.*;
+import model.cribbage.Hand;
+import model.cribbage.Board;
+import model.deck.Card;
+import model.deck.Rank;
+import model.deck.Suit;
 
 class EasyStrategyTest {
 
@@ -35,7 +36,7 @@ class EasyStrategyTest {
 
 		EasyStrategy strategy = new EasyStrategy();
 		ArrayList<Player> players = new ArrayList<>();
-		Board board = new Board(players, null);
+		Board board = new Board(players, null, null);
 		Card starter = Card.get(Rank.THREE, Suit.SPADES);
 
 		List<Card> discarded = strategy.discard(hand, board, starter);

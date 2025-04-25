@@ -1,9 +1,9 @@
-package player;
+package model.player;
 
 import java.util.List;
-import cribbage.Hand;
-import cribbage.Board;
-import deck.Card;
+import model.cribbage.Hand;
+import model.cribbage.Board;
+import model.deck.Card;
 
 public interface Strategy {
     List<Card> discard(Hand hand, Board board, Card starter);

@@ -1,9 +1,9 @@
-package player;
+package model.player;
 
 import java.util.List;
 
-import cribbage.Board;
-import deck.Card;
+import model.cribbage.Board;
+import model.deck.Card;
 
 public class ComputerPlayer extends Player {
     private Strategy strategy;

@@ -1,9 +1,9 @@
-package player;
+package model.player;
 
 import java.util.*;
-import cribbage.Board;
-import cribbage.Hand;
-import deck.Card;
+import model.cribbage.Board;
+import model.cribbage.Hand;
+import model.deck.Card;
 
 public class HardStrategy implements Strategy {
     

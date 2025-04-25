@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import deck.Card;
-import deck.Deck;
-import deck.Rank;
-import deck.Suit;
+import model.deck.Card;
+import model.deck.Deck;
+import model.deck.Rank;
+import model.deck.Suit;
 
 import org.junit.jupiter.api.BeforeEach;
 

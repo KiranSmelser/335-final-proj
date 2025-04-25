@@ -1,4 +1,5 @@
-package deck;
+package model.deck;
+
 import java.util.Objects;
 import java.util.Comparator;
 

@@ -1,4 +1,3 @@
-
 package view;
 
 /**
@@ -13,9 +12,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import cribbage.*;
-import player.*;
-import deck.*;
+import model.cribbage.*;
+import model.player.*;
+import model.deck.*;
 
 public class View {
 	
@@ -352,9 +351,9 @@ public class View {
      * @param before map of scores before hand scoring
      * @param after map of scores after hand scoring
      */
-    public void displayHandScores(Map<player.Player,Integer> before, Map<player.Player,Integer> after) {
+    public void displayHandScores(Map<Player,Integer> before, Map<Player,Integer> after) {
         System.out.println("\n--- Hand Scoring ---");
-        for (player.Player p : after.keySet()) {
+        for (Player p : after.keySet()) {
             int delta = after.get(p) - before.getOrDefault(p, 0);
             System.out.printf("%-12s : +%d point%s\n",
                 p.getName(),
@@ -372,7 +371,7 @@ public class View {
      * @param after map of scores after crib scoring
      * @param dealer the dealer who scores the crib
      */
-    public void displayCribScores(Map<player.Player,Integer> before, Map<player.Player,Integer> after, player.Player dealer) {
+    public void displayCribScores(Map<Player,Integer> before, Map<Player,Integer> after, Player dealer) {
         System.out.println("\n--- Crib Scoring ---");
         int delta = after.get(dealer) - before.getOrDefault(dealer, 0);
         System.out.printf("%-12s : +%d point%s\n",
@@ -388,9 +387,9 @@ public class View {
      *
      * @param players the list of players whose hands to show
      */
-    public void displayAllHands(List<player.Player> players) {
+    public void displayAllHands(List<Player> players) {
         System.out.println("\n=== Players' Hands ===");
-        for (player.Player p : players) {
+        for (Player p : players) {
             String hand = p.getHand().getCards().stream()
                 .map(Card::toString)
                 .collect(Collectors.joining("  "));
@@ -404,7 +403,7 @@ public class View {
      *
      * @param cards the list of cards in the crib
      */
-    public void displayCribContents(List<deck.Card> cards) {
+    public void displayCribContents(List<Card> cards) {
         System.out.println("\n=== Crib Contents ===");
         String cribCards = cards.stream()
             .map(Card::toString)

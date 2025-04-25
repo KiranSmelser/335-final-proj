@@ -1,9 +1,9 @@
-package player;
+package model.player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import deck.Card;
+import model.deck.Card;
 import view.View;
 
 public class HumanPlayer extends Player {
