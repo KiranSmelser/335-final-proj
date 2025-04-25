@@ -43,7 +43,12 @@ public class Hand {
     public void reset() {
         cards.clear();
     }
-
+    
+    // Sort Hand
+    public void sort() {
+    	Collections.sort(cards, Card.rankFirstComparator());
+    }
+    
     // Return textual view of the hand
     public ArrayList<String> getHand() {
         ArrayList<String> list = new ArrayList<>();
