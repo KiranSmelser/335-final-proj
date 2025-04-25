@@ -77,6 +77,7 @@ public class Cribbage {
         crib.clear();
 
         dealCards();
+        sortHands();
 
         Card starter = deck.pop();
 
@@ -126,6 +127,12 @@ public class Cribbage {
             for (Player p : players) {
                 p.addCard(deck.pop());
             }
+        }
+    }
+
+    private void sortHands() {
+        for (Player p: players) {
+            p.sortCards();
         }
     }
 
