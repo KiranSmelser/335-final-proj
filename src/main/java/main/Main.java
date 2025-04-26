@@ -1,5 +1,6 @@
 package main;
 
+import controller.Controller;
 import view.View;
 
 public class Main {

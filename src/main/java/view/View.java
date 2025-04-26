@@ -1,4 +1,4 @@
-package main.java.view;
+package view;
 
 /**
  * Handles all console-based user interaction for the Cribbage game.
@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import model.cribbage.*;
 import model.player.*;
 import model.deck.*;
 

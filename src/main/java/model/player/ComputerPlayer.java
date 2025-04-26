@@ -28,4 +28,8 @@ public class ComputerPlayer extends Player {
     public Card playCard(List<Card> playedCards, int currentCount) {
         return strategy.playCard(getHand(), playedCards, currentCount);
     }
+
+	public Strategy getStrategy() {
+		return strategy;
+	}
 }
