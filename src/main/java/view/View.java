@@ -93,7 +93,7 @@ public class View {
 
 		List<Card> playable = hand.stream()
 			.filter(c -> c.getValue() + currentCount <= 31)
-			.collect(Collectors.toList());	// DO NOT PUSH TO GITHUB //.toList();
+			.collect(Collectors.toList());
 
 		if (playable.isEmpty()) {
 			System.out.println("No playable cards. You pass.");
