@@ -1,4 +1,4 @@
-package view;
+package main.java.view;
 
 /**
  * Handles all console-based user interaction for the Cribbage game.
@@ -18,14 +18,10 @@ import model.deck.*;
 
 public class View {
 	
-	private Board board;
-	private Crib crib;
-	private Strategy strat;
-	private List<Player> players;
 	private Scanner scanner;
 	
 	// prompt scanner
-	private String prompt(String message) {
+	public String prompt(String message) {
 	    System.out.print(message);
 	    return scanner.nextLine().trim();
 	}
@@ -35,21 +31,7 @@ public class View {
      * Initializes player list and input scanner.
      */
 	public View() {
-		this.strat = null;
-		this.players = new ArrayList<Player>();
 		this.scanner = new Scanner(System.in);
-		this.crib = new Crib();
-		
-	}
-	
-    /**
-     * Begins the game by setting up players and starting the Cribbage game loop.
-     */
-	public void startGame() {
-	    // Prompt and set up players before starting the game
-	    List<Player> players = setupPlayers();
-	    Cribbage game = new Cribbage(players, this);
-	    game.startGame();
 	}
 	
     /**
@@ -60,39 +42,35 @@ public class View {
      * @return a list of two cards selected for the crib
      */
 	public List<Card> promptDiscards(HumanPlayer player, Card starter) {
-	    List<Card> hand = player.getHand().getCards();
-	    List<Card> chosenDiscards = new ArrayList<>();
+		List<Card> hand = player.getHand().getCards();
+        List<Card> chosenDiscards = new ArrayList<>();
 
-	    System.out.println(player.getName() + ", your hand:");
-	    for (int i = 0; i < hand.size(); i++) {
-	        System.out.println((i + 1) + ". " + hand.get(i));
-	    }
+        System.out.println(player.getName() + ", your hand:");
+        for (int i = 0; i < hand.size(); i++) {
+            System.out.println((i + 1) + ". " + hand.get(i));
+        }
 
-	    while (chosenDiscards.size() < 2) {
-	        String input = prompt("Select card #" + (chosenDiscards.size() + 1) + " to discard (1-" + hand.size() + "): ");
-	        try {
-	        	if (input.equals("q")) {
-	        		this.endGame();
-	        	}
-	            int index = Integer.parseInt(input) - 1;
-	            if (index >= 0 && index < hand.size()) {
-	                Card chosen = hand.get(index);
-	                if (!chosenDiscards.contains(chosen)) {
-	                    chosenDiscards.add(chosen);
-	                } else {
-	                    System.out.println("You've already chosen that card. Pick another.");
-	                }
-	            } else {
-	                System.out.println("Invalid index. Try again.");
-	            }
-	        } catch (NumberFormatException e) {
-	            System.out.println("Please enter a number.");
-	        }
-	    }
+        while (chosenDiscards.size() < 2) {
+            String input = prompt("Select card #" + (chosenDiscards.size() + 1) + " to discard (1-" + hand.size() + "): ");
+            try {
+                int index = Integer.parseInt(input) - 1;
+                if (index >= 0 && index < hand.size()) {
+                    Card chosen = hand.get(index);
+                    if (!chosenDiscards.contains(chosen)) {
+                        chosenDiscards.add(chosen);
+                    } else {
+                        System.out.println("You've already chosen that card. Pick another.");
+                    }
+                } else {
+                    System.out.println("Invalid index. Try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a number.");
+            }
+        }
 
-	    return chosenDiscards;
-	}
-
+        return chosenDiscards;
+    }
 	
     /**
      * Prompts a player to choose a card to play during pegging.
@@ -115,7 +93,7 @@ public class View {
 
 		List<Card> playable = hand.stream()
 			.filter(c -> c.getValue() + currentCount <= 31)
-			.toList();
+			.collect(Collectors.toList());	// DO NOT PUSH TO GITHUB //.toList();
 
 		if (playable.isEmpty()) {
 			System.out.println("No playable cards. You pass.");
@@ -123,29 +101,26 @@ public class View {
 		}
 
 		while (true) {
-			String input = prompt("Choose a card to play (1-" + hand.size() + "), or 0 to pass: ");
-			try {
-				if (input.equals("q")) {
-					this.endGame();
-				}
-				int choice = Integer.parseInt(input);
-				if (choice == 0) return null;
+            String input = prompt("Choose a card to play (1-" + hand.size() + "), or 0 to pass: ");
+            try {
+                int choice = Integer.parseInt(input);
+                if (choice == 0) return null;
 
-				if (choice >= 1 && choice <= hand.size()) {
-					Card selected = hand.get(choice - 1);
-					if (selected.getValue() + currentCount <= 31) {
-						return selected;
-					} else {
-						System.out.println("That play would exceed 31. Try again.");
-					}
-				} else {
-					System.out.println("Invalid number.");
-				}
-			} catch (NumberFormatException e) {
-				System.out.println("Enter a valid number.");
-			}
-		}
-	}
+                if (choice >= 1 && choice <= hand.size()) {
+                    Card selected = hand.get(choice - 1);
+                    if (selected.getValue() + currentCount <= 31) {
+                        return selected;
+                    } else {
+                        System.out.println("That play would exceed 31. Try again.");
+                    }
+                } else {
+                    System.out.println("Invalid number.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Enter a valid number.");
+            }
+        }
+    }
 
     /**
      * Displays the specified player's hand in the console.
@@ -183,128 +158,6 @@ public class View {
         System.out.println("\nGame Over!");
         System.out.println("Winner: " + winnerName);
     }
-
-    /**
-     * Handles the playMode flow to configure and return the list of players.
-     *
-     * @return the configured list of players for the game
-     */
-    private List<Player> setupPlayers() {
-        playMode();
-        return new ArrayList<>(players);
-    }
-	
-    /**
-     * Prompts the user to select single or two-player mode and configures players accordingly.
-     */
-	// Choosing how to play
-	public void playMode() {
-	    String choice;
-	    // Prompt for play mode until valid input
-	    do {
-	        System.out.println("1. Single Player");
-	        System.out.println("2. (Local) Two Players");
-	        choice = prompt("Press a number to choose how you want to play (1 or 2), or 'q' to quit: ");
-	        if (choice.equals("q")) {
-	            this.endGame();
-	        }
-	        if (!choice.equals("1") && !choice.equals("2")) {
-	            System.out.println("Invalid choice. Please enter 1 or 2.");
-	        }
-	    } while (!choice.equals("1") && !choice.equals("2"));
-
-	    // Configure players based on choice
-	    if (choice.equals("1")) {
-	        // Single player mode
-	        this.chooseStrategy();
-	        String name;
-	        // Validate user name
-	        do {
-	            name = prompt("Type in your name: ");
-	            if (name.isEmpty()) {
-	                System.out.println("Name cannot be empty. Please enter a valid name.");
-	            }
-	        } while (name.isEmpty());
-	        Player user = new HumanPlayer(name, this);
-
-	        // Validate computer name
-	        do {
-	            name = prompt("Type in the computer's name: ");
-	            if (name.isEmpty()) {
-	                System.out.println("Name cannot be empty. Please enter a valid name.");
-	            }
-	        } while (name.isEmpty());
-	        Player computer = new ComputerPlayer(name, this.strat, this.board);
-
-	        players.add(user);
-	        players.add(computer);
-	    } else {
-	        // Two-player mode
-	        String name;
-	        // Validate player one name
-	        do {
-	            name = prompt("Type in player one's name: ");
-	            if (name.isEmpty()) {
-	                System.out.println("Name cannot be empty. Please enter a valid name.");
-	            }
-	        } while (name.isEmpty());
-	        Player p1 = new HumanPlayer(name, this);
-
-	        // Validate player two name
-	        do {
-	            name = prompt("Type in player two's name: ");
-	            if (name.isEmpty()) {
-	                System.out.println("Name cannot be empty. Please enter a valid name.");
-	            }
-	        } while (name.isEmpty());
-	        Player p2 = new HumanPlayer(name, this);
-
-	        players.add(p1);
-	        players.add(p2);
-	    }
-
-	    System.out.println(players.get(0).getName() + " vs " + players.get(1).getName());
-	    // Initialize board with validated players
-	    this.board = new Board(players, crib, this);
-	}
-	
-    /**
-     * Prompts the user to select the computer strategy (easy or hard).
-     */
-	// Choosing mode
-	private void chooseStrategy() {
-	    String choice;
-	    // Prompt for strategy until valid input
-	    do {
-	        System.out.println("1. Easy");
-	        System.out.println("2. Hard");
-	        choice = prompt("Press a number to choose a mode (1 or 2), or 'q' to quit: ");
-	        if (choice.equals("q")) {
-	            this.endGame();
-	        }
-	        if (!choice.equals("1") && !choice.equals("2")) {
-	            System.out.println("Invalid choice. Please enter 1 or 2.");
-	        }
-	    } while (!choice.equals("1") && !choice.equals("2"));
-
-	    // Assign strategy based on valid choice
-	    if (choice.equals("1")) {
-	        strat = new EasyStrategy();
-	        System.out.println("You're on easy mode");
-	    } else {
-	        strat = new HardStrategy();
-	        System.out.println("You're on hard mode");
-	    }
-	}
-	
-    /**
-     * Returns a copy of the current player list.
-     *
-    * @return a list of players configured for the game
-     */
-	public List<Player> getPlayers() {
-		return new ArrayList<Player>(List.copyOf(players));
-	}
 	
     /**
      * Displays the cards played so far in the current pegging sequence.
@@ -346,15 +199,7 @@ public class View {
 	public void displayFirstPlayer(String playerName) {
 	    System.out.println("\n>>> " + playerName + " will go first! <<<\n");
 	}
-	
-    /**
-     * Ends the game immediately, closing resources and exiting.
-     */
-	public void endGame() {
-		System.out.println("Game Over!");
-		scanner.close();
-		System.exit(0);
-	}
+
     /**
      * Displays pegging points as they occur during play.
      *
@@ -363,12 +208,8 @@ public class View {
      * @param totalScore the player's new total score
      */
     public void displayPegScore(String playerName, int points, int totalScore) {
-        System.out.printf("\n%s scores %d point%s! [Total: %d]\n\n",
-            playerName,
-            points,
-            (points > 1 ? "s" : ""),
-            totalScore
-        );
+    	System.out.printf("\n%s scores %d point%s! [Total: %d]\n\n",
+                playerName, points, (points > 1 ? "s" : ""), totalScore);
     }
 
     /**
@@ -378,14 +219,11 @@ public class View {
      * @param after map of scores after hand scoring
      */
     public void displayHandScores(Map<Player,Integer> before, Map<Player,Integer> after) {
-        System.out.println("\n--- Hand Scoring ---");
+    	System.out.println("\n--- Hand Scoring ---");
         for (Player p : after.keySet()) {
             int delta = after.get(p) - before.getOrDefault(p, 0);
             System.out.printf("%-12s : +%d point%s\n",
-                p.getName(),
-                delta,
-                (delta > 1 ? "s" : "")
-            );
+                    p.getName(), delta, (delta > 1 ? "s" : ""));
         }
         System.out.println("--------------------\n");
     }
@@ -398,13 +236,10 @@ public class View {
      * @param dealer the dealer who scores the crib
      */
     public void displayCribScores(Map<Player,Integer> before, Map<Player,Integer> after, Player dealer) {
-        System.out.println("\n--- Crib Scoring ---");
+    	System.out.println("\n--- Crib Scoring ---");
         int delta = after.get(dealer) - before.getOrDefault(dealer, 0);
         System.out.printf("%-12s : +%d point%s\n",
-            dealer.getName(),
-            delta,
-            (delta > 1 ? "s" : "")
-        );
+                dealer.getName(), delta, (delta > 1 ? "s" : ""));
         System.out.println("---------------------\n");
     }
 
@@ -414,11 +249,11 @@ public class View {
      * @param players the list of players whose hands to show
      */
     public void displayAllHands(List<Player> players) {
-        System.out.println("\n=== Players' Hands ===");
+    	System.out.println("\n=== Players' Hands ===");
         for (Player p : players) {
             String hand = p.getHand().getCards().stream()
-                .map(Card::toString)
-                .collect(Collectors.joining("  "));
+                    .map(Card::toString)
+                    .collect(Collectors.joining("  "));
             System.out.printf("%-12s: %s\n", p.getName(), hand);
         }
         System.out.println("======================\n");
@@ -430,10 +265,10 @@ public class View {
      * @param cards the list of cards in the crib
      */
     public void displayCribContents(List<Card> cards) {
-        System.out.println("\n=== Crib Contents ===");
+    	System.out.println("\n=== Crib Contents ===");
         String cribCards = cards.stream()
-            .map(Card::toString)
-            .collect(Collectors.joining("  "));
+                .map(Card::toString)
+                .collect(Collectors.joining("  "));
         System.out.println(cribCards);
         System.out.println("=====================\n");
     }
